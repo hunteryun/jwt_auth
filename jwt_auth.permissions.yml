@@ -1,0 +1,3 @@
+jwt_auth:
+  title: 'Jwt Auth'
+  _callback: 'Hunter\jwt_auth\JwtAuthPermission'

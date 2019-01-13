@@ -1,0 +1,5 @@
+{
+    "require": {
+        "lcobucci/jwt": "v3.2.5"
+    }
+}

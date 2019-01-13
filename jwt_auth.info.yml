@@ -1,0 +1,5 @@
+name: JWT Auth
+type: module
+description: authorise users via jwt.
+core: 1.x
+package: Hunter

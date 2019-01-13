@@ -1,0 +1,89 @@
+<?php
+
+use Hunter\jwt_auth\Policier;
+
+/**
+ * Policier Helper
+ *
+ * @return Policier
+ */
+function policier($action = null, ...$args) {
+    $config = [
+      /**
+       * Token expiration time
+       */
+      "exp" => 3600,
+
+      /**
+       * The token can be used after this time
+       */
+      "nbf" => 60,
+
+      /**
+       * The token was issued
+       */
+      "iat" => 60,
+
+      /**
+       * Configure the transmitter
+       */
+      "iss" => "hunterphp",
+
+      /**
+       * Configure the audience
+       */
+      "aud" => "hunterphp",
+
+      /**
+       * Hash algorithm used
+       *
+       * HS256, HS384, HS512, RS256, RS384, RS512, ES256, ES384, ES512,
+       */
+      "alg" => "HS512",
+
+      /**
+       * Your Signature, this field is required for other types of hash except RSA
+       */
+      'signkey' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlFdP9pwuj6lYndTuUFO6',
+
+      /**
+       * Signature using your RSA, this will load automatically if the hash key is RSA type
+       */
+      "keychain" => [
+        /**
+         * Path to your private key
+         */
+        "private" => null,
+
+        /**
+         * Path to your public key
+         */
+        "public" => null
+      ]
+    ];
+
+    $policier = Policier::configure($config);
+
+    if (is_null($action)) {
+        return $policier;
+    }
+
+    if (!in_array($action, ['decode', 'encode', 'verify', 'validate', 'parse'])) {
+        throw new \Exception("Action not define");
+    }
+
+    return call_user_func_array([$policier, $action], $args);
+}
+
+/**
+ * get the jwt auth token.
+ */
+function jwt_auth_token($id, $claims) {
+  $token = policier('encode', $id, $claims);
+
+  if(!empty($token)){
+    return $token->getToken();
+  }
+
+  return false;
+}
